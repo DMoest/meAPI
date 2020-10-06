@@ -1,12 +1,12 @@
 const express = require("express"); // Import Express
-const app = express(); // Start Express through constant "app"
 const bodyParser = require("body-parser"); // Import BodyParser
 const morgan = require("morgan"); // Import Morgan for third party logging
+const app = express(); // Create constant "app" to run Express through
 const port = 1337; // Set port 1337
 
 /* --- Morgan setup to avoid logging 'test' --- */
 if (process.env.NODE_ENV !== 'test') {
-    app.use(morgan('combined'));
+    app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
 
 /* --- Middleware --- */
