@@ -1,12 +1,31 @@
-const express = require("express"); // Import Express
-const bodyParser = require("body-parser"); // Import BodyParser
-const morgan = require("morgan"); // Import Morgan for third party logging
-const cors = require("cors"); // Import CORS (cross-origin resource sharing)
+/*
+* Application: Me API
+* ------------------------------
+* @author Daniel Andersson, daap19
+* Built for course JS-Ramverk @ Blekinge Institute of Technologies.
+*/
+
+"use strict";
+
+/* --- Required Dependencies for Application --- */
+const express = require("express"); // Require Express
+const bodyParser = require("body-parser"); // Require BodyParser
+const morgan = require("morgan"); // Require Morgan for third party logging
+const cors = require("cors"); // Require CORS (cross-origin resource sharing)
+
 const app = express(); // Create constant "app" to run Express through
 const port = 1337; // Set port 1337
 
-/* --- CORS --- */
+/* --- Application use CORS --- */
 app.use(cors());
+
+/* --- Required Routes --- */
+const indexRoute = require('./routes/index');
+const helloRoute = require('./routes/hello');
+
+/* --- Application use routes --- */
+app.use('/', indexRoute);
+app.use('/hello', helloRoute);
 
 /* --- Morgan setup to avoid logging 'test' --- */
 if (process.env.NODE_ENV !== 'test') {
@@ -23,55 +42,6 @@ app.use((request, response, next) => {
 /* --- BodyParser --- */
 app.use(bodyParser.json()); // enable parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
-
-"use strict";
-
-
-
-/* --- Routes --- */
-app.get("/", (request, response) => {
-   const data = {
-       data: {
-           message: "Hello World!"
-       }
-   };
-
-   return response.json(data);
-});
-
-app.get("/user", (request, response) => {
-    response.json({
-        data: {
-            message: "Got a GET request, sending back 201 Created."
-        }
-    });
-});
-
-app.post("/user", (request, response) => {
-    response.status(201).json({
-       data: {
-           message: "Got a POST request, sending back status 201 Created."
-       }
-    });
-});
-
-app.put("/user", (request, response) => {
-    response.status(204).send();
-});
-
-app.delete("/user", (request, response) => {
-    response.status(204).send();
-});
-
-app.get("/hello/:message", (request, response) => {
-    const data = {
-        data: {
-            message: request.params.message
-        }
-    };
-
-    response.json(data);
-});
 
 /* 404 - Route to catch errors on wrong routes */
 app.use((request, response, next) => {
