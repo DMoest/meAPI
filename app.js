@@ -1,13 +1,28 @@
 const express = require("express"); // Import Express
 const app = express(); // Start Express through constant "app"
-const port = 1337; // Set port 1337
 const bodyParser = require("body-parser"); // Import BodyParser
+const morgan = require("morgan"); // Import Morgan for third party logging
+const port = 1337; // Set port 1337
+
+/* --- Morgan setup to avoid logging 'test' --- */
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('combined'));
+}
+
+/* --- Middleware --- */
+app.use((request, response, next) => {
+    console.log(request.method);
+    console.log(request.path);
+    next();
+});
 
 /* --- BodyParser --- */
 app.use(bodyParser.json()); // enable parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
 
 "use strict";
+
+
 
 /* --- Routes --- */
 app.get("/", (request, response) => {
