@@ -1,10 +1,15 @@
-const express = require("express");
-const app = express();
-const port = 1337;
+const express = require("express"); // Import Express
+const app = express(); // Start Express through constant "app"
+const port = 1337; // Set port 1337
+const bodyParser = require("body-parser"); // Import BodyParser
+
+/* --- BodyParser --- */
+app.use(bodyParser.json()); // enable parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
 
 "use strict";
 
-// Add a route
+/* --- Routes --- */
 app.get("/", (request, response) => {
    const data = {
        data: {
@@ -12,53 +17,41 @@ app.get("/", (request, response) => {
        }
    };
 
-   response.json;
+   return response.json(data);
+});
+
+app.get("/user", (request, response) => {
+    response.json({
+        data: {
+            message: "Got a GET request, sending back 201 Created."
+        }
+    });
 });
 
 app.post("/user", (request, response) => {
-   response.status(201).json({
+    response.status(201).json({
        data: {
-           message: "Got a POST request."
+           message: "Got a POST request, sending back status 201 Created."
        }
-   });
+    });
 });
 
 app.put("/user", (request, response) => {
-   response.status(204).send("204 No content");
-/*   response.json({
-        data: {
-            message: "Got a PUT request."
-        }
-    });*/
-
+    response.status(204).send();
 });
 
 app.delete("/user", (request, response) => {
-
-   response.json({
-       data: {
-           message: "Got a DELETE request."
-       }
-   });
+    response.status(204).send();
 });
 
-app.get("/hello/:message", (response, request) => {
-    let data;
-
-    data = {
+app.get("/hello/:message", (request, response) => {
+    const data = {
         data: {
             message: request.params.message
-        },
-    };
-
-    let errors = {
-        "links": {
-            "self": "http://localhost:1337/hello/:message"
         }
     };
 
-    console.log(request.params);
-    return response.json(data);
+    response.json(data);
 });
 
 // Start up server
