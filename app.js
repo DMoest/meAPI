@@ -75,9 +75,25 @@ app.get("/hello/:message", (request, response) => {
 
 /* 404 - Route to catch errors on wrong routes */
 app.use((request, response, next) => {
-    var err = new Error("Not Found");
-    err.status = 404;
-    next(err);
+    var error = new Error("Not Found");
+    error.status = 404;
+    next(error);
+});
+
+app.use((error, request, response, next) => {
+    if (response.headersSent) {
+        return next(error);
+    }
+
+    response.status(error.status || 500).json({
+        "errors": [
+            {
+                "status": error.status,
+                "title": error.message,
+                "detail": error.message
+            }
+        ]
+    });
 });
 
 // Start up server
