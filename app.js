@@ -1,8 +1,12 @@
 const express = require("express"); // Import Express
 const bodyParser = require("body-parser"); // Import BodyParser
 const morgan = require("morgan"); // Import Morgan for third party logging
+const cors = require("cors"); // Import CORS (cross-origin resource sharing)
 const app = express(); // Create constant "app" to run Express through
 const port = 1337; // Set port 1337
+
+/* --- CORS --- */
+app.use(cors());
 
 /* --- Morgan setup to avoid logging 'test' --- */
 if (process.env.NODE_ENV !== 'test') {
@@ -67,6 +71,13 @@ app.get("/hello/:message", (request, response) => {
     };
 
     response.json(data);
+});
+
+/* 404 - Route to catch errors on wrong routes */
+app.use((request, response, next) => {
+    var err = new Error("Not Found");
+    err.status = 404;
+    next(err);
 });
 
 // Start up server
