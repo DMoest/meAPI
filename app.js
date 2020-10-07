@@ -34,10 +34,28 @@ const jwt = require('jsonwebtoken');
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
 
+/* --- Morgan setup to avoid logging 'test' --- */
+if (process.env.NODE_ENV !== 'test') {
+    app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
+}
 
+/* --- Middleware --- */
+app.use((request, response, next) => {
+    console.log(request.method);
+    console.log(request.path);
+    next();
+});
+
+/* --- BodyParser --- */
+app.use(bodyParser.json()); // enable parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
 
 /* --- Application use CORS --- */
 app.use(cors());
+
+/* --- Application use routes --- */
+app.use('/', indexRoute);
+app.use('/hello', helloRoute);
 
 
 
@@ -75,8 +93,6 @@ const token = jwt.sign(payload, secret, {
     expiresIn: '30min'
 });
 
-
-
 /* --- JWT Verify --- */
 jwt.verify(token, process.env.JWT_SECRET, function(error, decoded) {
    if (error) {
@@ -86,32 +102,22 @@ jwt.verify(token, process.env.JWT_SECRET, function(error, decoded) {
    console.log("JWT Token verified successfully. ", decoded);
 });
 
+/* --- Check JWT --- */
+router.post("/reports",
+    (request, response, next) => checkToken(request, response, next),
+    (request, response) => reports.addReport(response, request.body))
 
-/* --- Application use routes --- */
-app.use('/', indexRoute);
-app.use('/hello', helloRoute);
+function checkToken(request, response, next) {
+    const token = request.headers['x-access-token'];
 
-/* --- Morgan setup to avoid logging 'test' --- */
-if (process.env.NODE_ENV !== 'test') {
-    app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
+    jwt.verify(token, process.env.JWT_SECRET, function(error, decoded) {
+        if (error) {
+            // Send error response
+            console.log("Check Token Error: ", error);
+        }
+        next();
+    });
 }
-
-
-
-/* --- Middleware --- */
-app.use((request, response, next) => {
-    console.log(request.method);
-    console.log(request.path);
-    next();
-});
-
-
-
-/* --- BodyParser --- */
-app.use(bodyParser.json()); // enable parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
-
-
 
 /* 404 - Route to catch errors on wrong routes */
 app.use((request, response, next) => {
