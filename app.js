@@ -8,13 +8,29 @@
 "use strict";
 
 /* --- Required Dependencies for Application --- */
-const express = require("express"); // Require Express
 const bodyParser = require("body-parser"); // Require BodyParser
 const morgan = require("morgan"); // Require Morgan for third party logging
 const cors = require("cors"); // Require CORS (cross-origin resource sharing)
 
+/* --- Require Express --- */
+const express = require("express"); // Require Express
 const app = express(); // Create constant "app" to run Express through
 const port = 1337; // Set port 1337
+
+/* --- Require database --- */
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./db/texts.sqlite');
+
+/* --- Insert to database --- */
+db.run("insert into users (email, password) values (?, ?)",
+    "superlongtpassword", (error) => {
+    if (error) {
+        console.log("Error, database insert fail.");
+        return error;
+    }
+
+    return console.info("Database insert success!");
+});
 
 /* --- Application use CORS --- */
 app.use(cors());
