@@ -27,7 +27,10 @@ const saltRounds = 12;
 const myPlaintextPassword = 'longAndSuperHardP4$$wOrDplease';
 const hash = 'longAndSuperHardP4$$wOrDplease';
 
-/* --- Required Routes --- */
+/* --- Require jsonwebtoken --- */
+const jwt = require('jsonwebtoken');
+
+/* --- Require Routes --- */
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
 
@@ -61,6 +64,27 @@ bcrypt.compare(myPlaintextPassword, hash, function(error, response) {
     // Response now contains true/false dependent on if its the right password or not.
 });
 
+
+
+/* --- JWT config-object --- */
+const payload = {
+    email: "d.andersson@example.com"
+};
+const secret = process.env.JWT_SECRET;
+const token = jwt.sign(payload, secret, {
+    expiresIn: '30min'
+});
+
+
+
+/* --- JWT Verify --- */
+jwt.verify(token, process.env.JWT_SECRET, function(error, decoded) {
+   if (error) {
+     console.log("Error to verify JWT Token. ", error);
+   }
+
+   console.log("JWT Token verified successfully. ", decoded);
+});
 
 
 /* --- Application use routes --- */
