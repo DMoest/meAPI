@@ -7,10 +7,18 @@
 
 "use strict";
 
+<<<<<<< HEAD
 /* --- Require Express --- */
 const express = require("express"); // Require Express
 const app = express(); // Create constant "app" to run Express through
 const port = 1337; // Set port 1337
+=======
+/* --- Required Dependencies for Application --- */
+const express = require("express"); // Require Express
+const bodyParser = require("body-parser"); // Require BodyParser
+const cors = require("cors"); // Require CORS (cross-origin resource sharing)
+const morgan = require("morgan"); // Require Morgan for third party logging
+>>>>>>> database
 
 /* --- Required Dependencies for Application --- */
 const bodyParser = require("body-parser"); // Require BodyParser
@@ -34,6 +42,17 @@ const jwt = require('jsonwebtoken');
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
 
+<<<<<<< HEAD
+=======
+/* --- Setup for enable to run Express with specific Port & router --- */
+const app = express(); // Create constant "app" to run Express through
+const router = express.Router(); // Create "router" constant for use of Express routes.
+const port = 1337; // Set port 1337
+
+/* --- Application use CORS --- */
+app.use(cors());
+
+>>>>>>> database
 /* --- Morgan setup to avoid logging 'test' --- */
 if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
@@ -50,9 +69,12 @@ app.use((request, response, next) => {
 app.use(bodyParser.json()); // enable parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
 
+<<<<<<< HEAD
 /* --- Application use CORS --- */
 app.use(cors());
 
+=======
+>>>>>>> database
 /* --- Application use routes --- */
 app.use('/', indexRoute);
 app.use('/hello', helloRoute);
@@ -61,9 +83,17 @@ app.use('/hello', helloRoute);
 
 /* --- Insert to database --- */
 db.run("insert into users (email, password) values (?, ?)",
+<<<<<<< HEAD
     "superlongtpassword", (error) => {
         if (error) {
             console.log("Error with database insert.");
+=======
+    "d.andersson@example.com",
+    "longAndSuperHardP4$$wOrDplease", (error) => {
+        if (error) {
+            console.log("Error with database insert.");
+            console.log("Could be because user already exists i database.");
+>>>>>>> database
             return error;
         }
 
@@ -132,11 +162,11 @@ app.use((error, request, response, next) => {
     }
 
     response.status(error.status || 500).json({
-        "errors": [
+        errors: [
             {
-                "status": error.status,
-                "title": error.message,
-                "detail": error.message
+                status: error.status,
+                title: error.message,
+                detail: error.message
             }
         ]
     });
