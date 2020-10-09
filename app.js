@@ -7,23 +7,18 @@
 
 "use strict";
 
-/* --- Require Express --- */
+/* --- Require Express & Dependencies for Application --- */
 const express = require("express"); // Require Express
-const app = express(); // Create constant "app" to run Express through
 const router = express.Router(); // Set router constant
-
-/* --- Require dotenv --- */
-require('dotenv').config(); // Run config method for dotenv package
-
-/* --- Set port from .env file --- */
-const port = process.env.PORT; // Set port through .env file
-
-/* --- Required Dependencies for Application --- */
+const app = express(); // Create constant "app" to run Express through
 const bodyParser = require("body-parser"); // Require BodyParser
-const cors = require("cors"); // Require CORS (cross-origin resource sharing)
 const morgan = require("morgan"); // Require Morgan for third party logging
+const cors = require("cors"); // Require CORS (cross-origin resource sharing)
 
-/* --- Require database --- */
+/* --- Require dotenv & run configuration method --- */
+require('dotenv').config(); // Run .config() method for dotenv package
+
+/* --- Require database dependencies --- */
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(process.env.DATABASE);
 
@@ -35,6 +30,9 @@ const hash = process.env.PASSWORD;
 
 /* --- Require jsonwebtoken --- */
 const jwt = require('jsonwebtoken');
+
+/* --- Set port from .env file --- */
+const port = process.env.PORT; // Set port through .env file
 
 /* --- Require Routes --- */
 const indexRoute = require('./routes/index');
@@ -48,19 +46,16 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
 
+/* --- BodyParser --- */
+app.use(bodyParser.json()); // enable parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
+
 /* --- Middleware --- */
 app.use((request, response, next) => {
     console.log(request.method);
     console.log(request.path);
     next();
 });
-
-/* --- BodyParser --- */
-app.use(bodyParser.json()); // enable parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // enable parsing application/x-www-form7urlencoded
-
-/* --- Application use CORS --- */
-app.use(cors());
 
 /* --- Application use routes --- */
 app.use('/', indexRoute);
@@ -82,11 +77,20 @@ db.run("insert into users (email, password) values (?, ?)",
 /* --- BCrypt save passwords to db --- */
 bcrypt.hash(myPlaintextPassword, saltRounds, function(error, hash) {
     // Save passwords to database.
+    console.info("Check HASH:", hash);
 });
 
 /* --- BCrypt compare password to database --- */
 bcrypt.compare(myPlaintextPassword, hash, function(error, response) {
     // Response now contains true/false dependent on if its the right password or not.
+
+    error: "there is an error here."
+    if (response === true) {
+        console.info("There is an error occuring in BCrypt authentication of password.", error);
+        console.info("Response: ", response);
+    } else {
+        console.info("Response: ", response);
+    }
 });
 
 /* --- JWT config-object --- */
@@ -126,7 +130,7 @@ function checkToken(request, response, next) {
 
 /* 404 - Route to catch errors on wrong routes */
 app.use((request, response, next) => {
-    var error = new Error("Not Found");
+    let error = new Error("Not Found");
     error.status = 404;
     next(error);
 });
