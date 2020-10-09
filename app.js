@@ -7,21 +7,31 @@
 
 "use strict";
 
-/* --- Required Dependencies for Application --- */
+/* --- Require Express --- */
 const express = require("express"); // Require Express
+const app = express(); // Create constant "app" to run Express through
+const router = express.Router(); // Set router constant
+
+/* --- Require dotenv --- */
+require('dotenv').config(); // Run config method for dotenv package
+
+/* --- Set port from .env file --- */
+const port = process.env.PORT; // Set port through .env file
+
+/* --- Required Dependencies for Application --- */
 const bodyParser = require("body-parser"); // Require BodyParser
 const cors = require("cors"); // Require CORS (cross-origin resource sharing)
 const morgan = require("morgan"); // Require Morgan for third party logging
 
 /* --- Require database --- */
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./db/texts.sqlite');
+const db = new sqlite3.Database(process.env.DATABASE);
 
 /* --- Require BCryptJS --- */
 const bcrypt = require('bcryptjs');
 const saltRounds = 12;
-const myPlaintextPassword = 'longAndSuperHardP4$$wOrDplease';
-const hash = 'longAndSuperHardP4$$wOrDplease';
+const myPlaintextPassword = process.env.PASSWORD;
+const hash = process.env.PASSWORD;
 
 /* --- Require jsonwebtoken --- */
 const jwt = require('jsonwebtoken');
@@ -29,11 +39,6 @@ const jwt = require('jsonwebtoken');
 /* --- Require Routes --- */
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
-
-/* --- Setup for enable to run Express with specific Port & router --- */
-const app = express(); // Create constant "app" to run Express through
-const router = express.Router(); // Create "router" constant for use of Express routes.
-const port = 1337; // Set port 1337
 
 /* --- Application use CORS --- */
 app.use(cors());
@@ -63,11 +68,11 @@ app.use('/hello', helloRoute);
 
 /* --- Insert to database --- */
 db.run("insert into users (email, password) values (?, ?)",
-    "d.andersson@example.com",
-    "longAndSuperHardP4$$wOrDplease", (error) => {
+    process.env.USER,
+    process.env.PASSWORD, (error) => {
         if (error) {
-            console.log("Error with database insert.");
-            console.log("Could be because user already exists i database.");
+            console.info("Error @ database insert.");
+            console.info("Could depend on user already exists in database.");
             return error;
         }
 
