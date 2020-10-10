@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
 router.get("/", function(request, response, next) {
     const data = {
@@ -7,7 +7,7 @@ router.get("/", function(request, response, next) {
           message: "Hello World! This is 'INDEX' route."
       }
     };
-
+    next();
     return response.json(data);
 });
 
