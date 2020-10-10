@@ -37,6 +37,8 @@ const port = process.env.PORT; // Set port through .env file
 /* --- Require Routes --- */
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
+const meRoute = require('./routes/me');
+const reportsRoute = require('./routes/reports');
 
 /* --- Application use CORS --- */
 app.use(cors());
@@ -60,6 +62,8 @@ app.use((request, response, next) => {
 /* --- Application use routes --- */
 app.use('/', indexRoute);
 app.use('/hello', helloRoute);
+app.use('/me', meRoute);
+app.use('/reports', reportsRoute);
 
 /* --- Insert to database --- */
 db.run("insert into users (email, password) values (?, ?)",
