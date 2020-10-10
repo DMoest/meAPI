@@ -18,9 +18,8 @@ const cors = require("cors"); // Require CORS (cross-origin resource sharing)
 /* --- Require dotenv & run configuration method --- */
 require('dotenv').config(); // Run .config() method for dotenv package
 
-/* --- Require database dependencies --- */
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(process.env.DATABASE);
+/* --- Require database --- */
+const db = require("./db/database.js");
 
 /* --- Require BCryptJS --- */
 const bcrypt = require('bcryptjs');
@@ -79,7 +78,7 @@ bcrypt.hash(myPlaintextPassword, saltRounds, function(error, hash) {
         process.env.USER,
         process.env.PASSWORD, (error) => {
             if (error) {
-                console.info("Error @ database insert.");
+                console.info("Error @ user insert to database.");
                 console.info("Could depend on user already exists in database.");
                 return error;
             }
