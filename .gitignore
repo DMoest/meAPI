@@ -106,7 +106,4 @@ dist
 # Aviod to overwrite our production database @ deploy
 *.sqlite
 
-# Aviod pushing enviroment variables containing JWT Tokens & passwords
-.env
-
 .idea/

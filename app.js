@@ -25,8 +25,8 @@ const db = new sqlite3.Database(process.env.DATABASE);
 /* --- Require BCryptJS --- */
 const bcrypt = require('bcryptjs');
 const saltRounds = 12;
+const hash = "process.env.PASSWORD";
 const myPlaintextPassword = process.env.PASSWORD;
-const hash = process.env.PASSWORD;
 
 /* --- Require jsonwebtoken --- */
 const jwt = require('jsonwebtoken');
@@ -83,13 +83,11 @@ bcrypt.hash(myPlaintextPassword, saltRounds, function(error, hash) {
 /* --- BCrypt compare password to database --- */
 bcrypt.compare(myPlaintextPassword, hash, function(error, response) {
     // Response now contains true/false dependent on if its the right password or not.
-
-    error: "there is an error here."
     if (response === true) {
-        console.info("There is an error occuring in BCrypt authentication of password.", error);
-        console.info("Response: ", response);
+        console.info("BCrypt password response: ", response);
     } else {
-        console.info("Response: ", response);
+        console.info("BCrypt - There is an error occuring with authentication of the password.", error);
+        console.info("BCrypt password response: ", response);
     }
 });
 
@@ -154,4 +152,6 @@ app.use((error, request, response, next) => {
 
 
 /* --- Start up server --- */
-app.listen(port, () => console.info(`API listening to port ${port}!`));
+const server = app.listen(port, () => console.info(`API listening to port ${port}!`));
+
+module.exports = server;
