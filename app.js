@@ -39,6 +39,8 @@ const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
 const meRoute = require('./routes/me');
 const reportsRoute = require('./routes/reports');
+const registerRoute = require('./routes/register');
+const loginRoute = require('./routes/login');
 
 /* --- Application use CORS --- */
 app.use(cors());
@@ -64,6 +66,8 @@ app.use('/', indexRoute);
 app.use('/hello', helloRoute);
 app.use('/me', meRoute);
 app.use('/reports', reportsRoute);
+app.use('/register', registerRoute);
+app.use('/login', loginRoute);
 
 /* --- BCrypt save passwords to db --- */
 bcrypt.hash(myPlaintextPassword, saltRounds, function(error, hash) {
