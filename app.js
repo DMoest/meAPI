@@ -22,10 +22,14 @@ app.use(cors());
 /* --- Required Routes --- */
 const indexRoute = require('./routes/index');
 const helloRoute = require('./routes/hello');
+const meRoute = require('./routes/me');
+const reportsRoute = require('./routes/reports');
 
 /* --- Application use routes --- */
 app.use('/', indexRoute);
 app.use('/hello', helloRoute);
+app.use('/me', meRoute);
+app.use('/reports', reportsRoute);
 
 /* --- Morgan setup to avoid logging 'test' --- */
 if (process.env.NODE_ENV !== 'test') {
@@ -45,7 +49,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // enable parsing applicatio
 
 /* 404 - Route to catch errors on wrong routes */
 app.use((request, response, next) => {
-    var error = new Error("Not Found");
+    let error = new Error("Not Found");
     error.status = 404;
     next(error);
 });
@@ -56,11 +60,11 @@ app.use((error, request, response, next) => {
     }
 
     response.status(error.status || 500).json({
-        "errors": [
+        errors: [
             {
-                "status": error.status,
-                "title": error.message,
-                "detail": error.message
+                status: error.status,
+                title: error.message,
+                detail: error.message
             }
         ]
     });
