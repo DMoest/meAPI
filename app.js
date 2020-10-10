@@ -65,23 +65,23 @@ app.use('/hello', helloRoute);
 app.use('/me', meRoute);
 app.use('/reports', reportsRoute);
 
-/* --- Insert to database --- */
-db.run("insert into users (email, password) values (?, ?)",
-    process.env.USER,
-    process.env.PASSWORD, (error) => {
-        if (error) {
-            console.info("Error @ database insert.");
-            console.info("Could depend on user already exists in database.");
-            return error;
-        }
-
-        return console.info("Database insert success!");
-    });
-
 /* --- BCrypt save passwords to db --- */
 bcrypt.hash(myPlaintextPassword, saltRounds, function(error, hash) {
     // Save passwords to database.
     console.info("Check HASH:", hash);
+
+    /* --- Insert to database --- */
+    db.run("insert into users (email, password) values (?, ?)",
+        process.env.USER,
+        process.env.PASSWORD, (error) => {
+            if (error) {
+                console.info("Error @ database insert.");
+                console.info("Could depend on user already exists in database.");
+                return error;
+            }
+
+            return console.info("Database insert success!");
+        });
 });
 
 /* --- BCrypt compare password to database --- */
