@@ -5,5 +5,10 @@ name = "javascript"
 enabled = true
 
   [analyzers.meta]
-  environment = ["nodejs"]
+  environment = ["nodejs","Express","bcryptjs","body-parser","cors","dotenv","jsonwebtoken","sqlite3"]
   plugins = ["vue"]
+
+  dependency_file_path = [
+  "./package.json",
+  "./package-lock.json"
+  ]
