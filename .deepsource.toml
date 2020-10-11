@@ -13,5 +13,4 @@ enabled = true
 
   [analyzers.meta]
   environment = ["nodejs", "mongo"]
-  module_system = ["commonjs","es-modules","amd"]
   plugins = ["vue"]
