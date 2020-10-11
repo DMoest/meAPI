@@ -5,7 +5,7 @@ name = "javascript"
 enabled = true
 
   [analyzers.meta]
-  environment = ["nodejs","Express","bcryptjs","body-parser","cors","dotenv","jsonwebtoken","sqlite3"]
+  environment = ["nodejs", "mongo"]
   plugins = ["vue"]
 
   dependency_file_path = [
