@@ -146,11 +146,11 @@ app.use((error, request, response, next) => {
     }
 
     response.status(error.status || 500).json({
-        errors: [
+        "errors": [
             {
-                status: error.status,
-                title: error.message,
-                detail: error.message
+                "status": error.status,
+                "title": error.message,
+                "detail": error.message
             }
         ]
     });
